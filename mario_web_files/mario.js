@@ -11,6 +11,8 @@ var Mario;
 window.onload = init; // calls the function named "init"
 // declare the background image
 var bgImage = new Image();
+var marioAtRest = 615;
+var marioJumpDistance = MarioAtRest-80;
 
 // Is called when the window loads;
 function init() {
@@ -19,7 +21,7 @@ function init() {
 	// TODO: Put Mario on the ground instead of the cloud
 	Mario = {
 		x: 100,
-		y: 280,
+		y: 615,
 		w: 50,
 		h: 80,
 		JumpSound: new Audio('jump.wav'),
@@ -36,6 +38,8 @@ function init() {
 	draw();
 
 	// TODO: (OPTIONAL) set mario_08.wav as background music
+	var bgMusic = new Audio('mario_08.wav');
+	bgMusic.play();
 
 }
 
@@ -55,31 +59,47 @@ function draw() {
 
 	/*
 	 * TODO: Draw Mario's initial image
+	 *
+	 *
 	 */
 
 
+
+
 	/////////////////////////////////////////////////////////////////
+	var marioImage = new Image();
+	marioImage.src = "mario1.png";
+	marioImage.onload = function(){
+        ctx.drawImage(marioImage, Mario.x, Mario.y, Mario.w, Mario.h );
+
+
+
+    }
+
+
 	var render = function () {
-		ctx.drawImage(bgImage, 0, 0); 
-		renderMario();
+		ctx.drawImage(bgImage, 0, 0);
+        renderMario();
+
+
 	}
 
 	/*
 	 * TODO: Alter the y coordinates so Mario will jump while on the ground
 	 */
 	function renderMario(){
-		if (Mario.y > 200 && Mario.moving == "up") {
+		if (Mario.y > marioJumpDistance && Mario.moving === "up") {
 			Mario.Image.src = "mario2.png";
 			ctx.drawImage(Mario.Image, Mario.x, Mario.y, Mario.w, Mario.h);
 			// Change the y value each time 
 			Mario.y -= 5; // move 5 px up
-		}else if(Mario.y <= 200 && Mario.moving == "up"){
+		}else if(Mario.y <= marioJumpDistance && Mario.moving === "up"){
 			Mario.moving = "down";
-		} else if(Mario.y < 280 && Mario.moving == "down"){
+		} else if(Mario.y < marioAtRest && Mario.moving === "down"){
 			Mario.Image.src = "mario2.png";
 			ctx.drawImage(Mario.Image, Mario.x, Mario.y, Mario.w, Mario.h);
 			Mario.y += 5; // move 5 px back down after a jump
-		}else if(Mario.y == 280 && Mario.moving == "no"){
+		}else if(Mario.y === marioAtRest && Mario.moving === "no"){
 			Mario.moving = "up";
 			Mario.JumpSound.play();
 		}else{
@@ -107,9 +127,23 @@ function draw() {
     	var keycode = e.charCode || e.keyCode; // any kind of key
 		console.log(keycode);
 		// The user wants Mario to jump:
-    	if(keycode === 13 && Mario.moving == "no") {  
-        	Mario.timer = setInterval(render, Mario.timerInterval); 
+    	if(keycode === 13 && Mario.moving === "no") {
+        	Mario.timer = setInterval(render, Mario.timerInterval);
+
     	}
+
+    	if(keycode === 37) {
+    		Mario.Image.src = "marioturnsleft.png";
+    		ctx.drawImage(bgImage, 0 ,0);
+    		ctx.drawImage(Mario.Image, Mario.x, Mario.y, Mario.w, Mario.h);
+    		if(Mario.x >= 5) {
+    			Mario.x -= 5;
+			}
+
+		}
+        if(keycode === 37) {
+
+        }
 
 
 
@@ -120,6 +154,7 @@ function draw() {
      * TODO: to face Mario forward after 200 ms. HINT: setTimeout(function, timeInMilliSecs)
      */
     document.body.onkeyup = function(e) {  // listen for a key
+
 
     }
 
